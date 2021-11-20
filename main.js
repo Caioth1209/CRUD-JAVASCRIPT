@@ -14,6 +14,35 @@ let cadastros = [];
 
 $(document).ready(() => {
 
+    if (localStorage.getItem("cadastros") != null) {
+        cadastros = JSON.parse(localStorage.getItem("cadastros"));
+    }
+
+    let texto = "";
+
+    for (i = 0; i < cadastros.length; i++) {
+
+        texto += "<tr>" +
+                    "<td>" + cadastros[i].nome + "</td>" +
+                    "<td>" + cadastros[i].cpf + "</td>" +
+                    "<td>" + cadastros[i].email + "</td>" +
+                    "<td>" +
+                        "<button type='button' onclick='pegarId("+i+")' class='btn btn-primary'>Editar</button>" +
+                        "<button type='button' id='btExcluir' class='btn btn-danger'>Excluir</button>" +
+                    "</td>" +
+                "</tr>";
+    }
+
+    if (texto == "") {
+        $("#colunas").html(
+            "<tr>" +
+                "<td colspan='5' class='text-danger'> Nenhum usuário cadastrado até o momento </tr>" +
+            "</tr>"
+        );
+    } else {
+        $("#colunas").html(texto);
+    }
+
     //funcao de cadastro
     $("#formularioCadastro").submit((event)=>{
 
@@ -45,14 +74,7 @@ $(document).ready(() => {
 
             localStorage.setItem("cadastros", JSON.stringify(cadastros));
 
-            $("#msgErro").css({"display": "none"});
-            $("#msgExito").css({"display": "block"});
-
-            setTimeout(() => {
-
-                $("#msgExito").css({"display": "none"});
-                
-            }, 5000);
+            window.location.reload();
 
         } else {
 
@@ -188,51 +210,6 @@ $(document).ready(() => {
     })
     ////////////////////////////
 
-
-    // mostra os cadastros
-    $("#btVerCadastros").click(() => {
-
-        $("#formularioCadastro").css({"display":"none"});
-        $("#cadastros").css({"display":"block"});
-
-        
-        if (localStorage.getItem("cadastros") != null) {
-            cadastros = JSON.parse(localStorage.getItem("cadastros"));
-        }
-
-        let texto = "";
-
-        for (i = 0; i < cadastros.length; i++) {
-
-            texto += "<tr>" +
-                        "<td>" + cadastros[i].nome + "</td>" +
-                        "<td>" + cadastros[i].cpf + "</td>" +
-                        "<td>" + cadastros[i].email + "</td>" +
-                        "<td>" +
-                            "<button type='button' onclick='pegarId("+i+")' class='btn btn-primary'>Editar</button>" +
-                        "</td>" +
-                    "</tr>";
-        }
-
-        if (texto == "") {
-            $("#colunas").html(
-                "<tr>" +
-                    "<td colspan='5' class='text-danger'> Nenhum usuário cadastrado até o momento </tr>" +
-                "</tr>"
-            );
-        } else {
-            $("#colunas").html(texto);
-        }
-    })
-    ////////////////////////////
-
-    //mostra o formulario de cadastro
-    $("#btVoltar").click(() =>{
-        $("#cadastros").css({"display":"none"});
-        $("#formularioCadastro").css({"display":"block"});
-    })
-    ////////////////////////////
-
     //edita o usuario
     $("#formularioEditar").submit((event)=>{
 
@@ -306,32 +283,35 @@ $(document).ready(() => {
     
         localStorage.setItem("cadastros", JSON.stringify(cadastros));
     
+        localStorage.setItem("apagado", "1");
+
         window.location.replace("index.html");
+
     })
     ////////////////////////////
 })
 
-//pega o id do usuario para ser editado
 function pegarId(id) {
-    localStorage.setItem("idUsuario", JSON.stringify(id));
-    window.location.replace("editar.html");
-}
-///////////////////////////
-
-function informacoesUsuario() {
-    let id;
-    
-    if (localStorage.getItem("cadastros") != null && localStorage.getItem("idUsuario") != null) {
+    if (localStorage.getItem("cadastros") != null) {
         cadastros = JSON.parse(localStorage.getItem("cadastros"));
-        id = JSON.parse(localStorage.getItem("idUsuario"));
     }
 
-    $("#id").val(id);
-    $("#nome").val(cadastros[id].nome);
-    $("#cpf").val(cadastros[id].cpf);
-    $("#email").val(cadastros[id].email);
+    $("#formularioEditar").find(".mb-3 > #id").val(id);
+    $("#formularioEditar").find(".mb-3 > #nome").val(cadastros[id].nome);
+    $("#formularioEditar").find(".mb-3 > #cpf").val(cadastros[id].cpf);
+    $("#formularioEditar").find(".mb-3 > .col-md-6 > #email").val(cadastros[id].email);
+
+    $("#abrirModalEditar").click();
 }
 
-function atualizaInformacoes() {
-    localStorage.removeItem("idUsuario");
+function mensagem() {
+    if (localStorage.getItem("apagado") != null) {
+        alert("oi")
+        $("#msgExito").css({"display": "block"});
+
+        setTimeout(() => {
+            $("#msgExito").css({"display": "none"});
+            localStorage.removeItem("apagado");
+        }, 5000);
+    }
 }
