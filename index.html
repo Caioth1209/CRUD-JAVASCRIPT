@@ -125,6 +125,30 @@
             </div>
         </div>
 
+        <button type="button" hidden id="abrirModalExcluir" data-bs-toggle="modal" data-bs-target="#modalExcluir">Excluir pessoa</button>
+
+        <div class="modal fade" id="modalExcluir" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalExcluirLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalExcluirLabel">Deseja realmente excluir?</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formularioExcluir"> 
+                        
+                        <input type="text" hidden id="id">
+            
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Não</button>
+                        <button type="button" class="btn btn-success" id="excluirPessoa">Sim</button>
+                        
+                    </form>
+                </div>
+              </div>
+            </div>
+        </div>
+
+
         <div>
             <table class="table table-striped">
                 <thead>

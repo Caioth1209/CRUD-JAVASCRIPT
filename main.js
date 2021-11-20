@@ -250,6 +250,24 @@ $(document).ready(() => {
         imprimeDados();
     })
     ////////////////////////////
+
+    //exclui uma pessoa
+    $("#excluirPessoa").click(() => {
+        if(localStorage.getItem("cadastros") != null){
+            cadastros = JSON.parse(localStorage.getItem("cadastros"));
+        }        
+
+        let id = $("#formularioExcluir").find("#id").val();
+
+        cadastros.splice(id, 1);
+
+        localStorage.setItem("cadastros", JSON.stringify(cadastros));
+
+        localStorage.setItem("apagado", "1");
+
+        $(".btn-close").click();
+    })
+    ////////////////////////////
 })
 
 function imprimeDados() {
@@ -267,8 +285,8 @@ function imprimeDados() {
                     "<td>" + cadastros[i].cpf + "</td>" +
                     "<td>" + cadastros[i].email + "</td>" +
                     "<td>" +
-                        "<button type='button' onclick='pegarId("+i+")' class='btn btn-primary'>Editar</button>" +
-                        "<button type='button' onclick='excluirPessoa("+i+")' class='btn btn-danger'>Excluir</button>" +
+                        "<button type='button' onclick='pegarIdEditar("+i+")' class='btn btn-primary'>Editar</button>" +
+                        "<button type='button' onclick='pegarIdExcluir("+i+")' class='btn btn-danger'>Excluir</button>" +
                     "</td>" +
                 "</tr>";
     }
@@ -303,13 +321,14 @@ function imprimeDados() {
                 $("#msgCadastrado").css("display", "none"); 
                 localStorage.removeItem("cadastrado");
             }, 5000); 
-            
+
         }
     }
 }
 
 // funcao usada para levar o id ate o formulario de edição
-function pegarId(id) {
+function pegarIdEditar(id) {
+
     if (localStorage.getItem("cadastros") != null) {
         cadastros = JSON.parse(localStorage.getItem("cadastros"));
     }
@@ -320,21 +339,16 @@ function pegarId(id) {
     $("#formularioEditar").find(".mb-3 > .col-md-6 > #email").val(cadastros[id].email);
 
     $("#abrirModalEditar").click();
+
 }
 ////////////////////////////
 
-//exclui uma pessoa
-function excluirPessoa(id) {
+// funcao usada para levar o id ate o modal de exclusao
+function pegarIdExcluir(id) {
 
-    if(localStorage.getItem("cadastros") != null){
-        cadastros = JSON.parse(localStorage.getItem("cadastros"));
-    }        
-    cadastros.splice(id, 1);
+    $("#formularioExcluir").find("#id").val(id);
 
-    localStorage.setItem("cadastros", JSON.stringify(cadastros));
+    $("#abrirModalExcluir").click(); 
 
-    localStorage.setItem("apagado", "1");
-
-    imprimeDados();
 }
-////////////////////////////
+////////////////////////////  
