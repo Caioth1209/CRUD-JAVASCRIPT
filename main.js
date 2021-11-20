@@ -184,7 +184,7 @@ $(document).ready(() => {
     })
     ////////////////////////////
 
-    //edita o usuario
+    //edita a pessoa
     $("#formularioEditar").submit((event)=>{
 
         let index = $("#formularioEditar").find("#id").val();
@@ -203,9 +203,11 @@ $(document).ready(() => {
     
         for (i = 0; i < cadastros.length; i++){
     
+            // se for igual não tem porque verificar se o dado da pessoa é igual ao da mesma
             if(i != index){
                 if ((cpf == cadastros[i].cpf || email == cadastros[i].email)) {
                     isValid = false;
+                    break;
                 }
             }
         }
@@ -218,7 +220,7 @@ $(document).ready(() => {
 
             localStorage.setItem("cadastros", JSON.stringify(cadastros));
         
-            $("#msgErro").css("display", "none");
+            $("#formularioEditar").find("#msgErro").css("display", "none");
             $("#msgEditado").css("display", "block");
     
             setTimeout(() => {
@@ -230,11 +232,11 @@ $(document).ready(() => {
         } else {
     
             $("#msgEditado").css("display", "none");
-            $("#msgErro").css("display", "block");
+            $("#formularioEditar").find("#msgErro").css("display", "block");
     
             setTimeout(() => {
     
-                $("#msgErro").css("display", "none");
+                $("#formularioEditar").find("#msgErro").css("display", "none");
                 
             }, 5000);
             
@@ -294,7 +296,7 @@ function imprimeDados() {
     if (texto == "") {
         $("#colunas").html(
             "<tr>" +
-                "<td colspan='5' class='text-danger'> Nenhum usuário cadastrado até o momento </tr>" +
+                "<td colspan='5' class='text-danger'> Nenhuma pessoa cadastrada até o momento.</tr>" +
             "</tr>"
         );
     } else {
