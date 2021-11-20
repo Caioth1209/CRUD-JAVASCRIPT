@@ -14,35 +14,6 @@ let cadastros = [];
 
 $(document).ready(() => {
 
-    if (localStorage.getItem("cadastros") != null) {
-        cadastros = JSON.parse(localStorage.getItem("cadastros"));
-    }
-
-    let texto = "";
-
-    for (i = 0; i < cadastros.length; i++) {
-
-        texto += "<tr>" +
-                    "<td>" + cadastros[i].nome + "</td>" +
-                    "<td>" + cadastros[i].cpf + "</td>" +
-                    "<td>" + cadastros[i].email + "</td>" +
-                    "<td>" +
-                        "<button type='button' onclick='pegarId("+i+")' class='btn btn-primary'>Editar</button>" +
-                        "<button type='button' id='btExcluir' class='btn btn-danger'>Excluir</button>" +
-                    "</td>" +
-                "</tr>";
-    }
-
-    if (texto == "") {
-        $("#colunas").html(
-            "<tr>" +
-                "<td colspan='5' class='text-danger'> Nenhum usuário cadastrado até o momento </tr>" +
-            "</tr>"
-        );
-    } else {
-        $("#colunas").html(texto);
-    }
-
     //funcao de cadastro
     $("#formularioCadastro").submit((event)=>{
 
@@ -50,11 +21,11 @@ $(document).ready(() => {
             cadastros = JSON.parse(localStorage.getItem("cadastros"));
         }
 
-        let nome = $("#nome").val().trim();
-
-        let cpf = $("#cpf").val().trim();
-
-        let email = $("#email").val().trim();        
+        let nome = $("#formularioCadastro").find(".mb-3 > #nome").val();
+    
+        let cpf = $("#formularioCadastro").find(".mb-3 > #cpf").val();
+    
+        let email = $("#formularioCadastro").find(".mb-3 > .col-md-6 > #email").val();      
 
         let isValid = true;
 
@@ -74,11 +45,14 @@ $(document).ready(() => {
 
             localStorage.setItem("cadastros", JSON.stringify(cadastros));
 
-            window.location.reload();
+            $(".btn-close").click();
+
+            localStorage.setItem("cadastrado", "1");
+
+            imprimeDados();
 
         } else {
 
-            $("#msgExito").css({"display": "none"});
             $("#msgErro").css({"display": "block"});
 
             setTimeout(() => {
@@ -88,13 +62,13 @@ $(document).ready(() => {
             }, 5000);
         }
 
-        $("#nome").val("");
+        $("#formularioCadastro").find(".mb-3 > #nome").val("");
+    
+        $("#formularioCadastro").find(".mb-3 > #cpf").val("");
+    
+        $("#formularioCadastro").find(".mb-3 > .col-md-6 > #email").val("");   
 
-        $("#cpf").val("");
-
-        $("#email").val("");
-
-        $("#emailConfirm").val("");
+        $("#formularioCadastro").find(".mb-3 > .col-md-6 > #emailConfirm").val("");   
 
         event.preventDefault();
     })
@@ -213,13 +187,13 @@ $(document).ready(() => {
     //edita o usuario
     $("#formularioEditar").submit((event)=>{
 
-        let index = $("#id").val();
+        let index = $("#formularioEditar").find("#id").val();
     
-        let nome = $("#nome").val();
+        let nome = $("#formularioEditar").find(".mb-3 > #nome").val();
     
-        let cpf = $("#cpf").val();
+        let cpf = $("#formularioEditar").find(".mb-3 > #cpf").val();
     
-        let email = $("#email").val();
+        let email = $("#formularioEditar").find(".mb-3 > .col-md-6 > #email").val();      
         
         if(localStorage.getItem("cadastros") != null){
             cadastros = JSON.parse(localStorage.getItem("cadastros"));
@@ -229,9 +203,9 @@ $(document).ready(() => {
     
         for (i = 0; i < cadastros.length; i++){
     
-            if (i != index) {
+            if(i != index){
                 if ((cpf == cadastros[i].cpf || email == cadastros[i].email)) {
-                    isValid = false;   
+                    isValid = false;
                 }
             }
         }
@@ -239,23 +213,23 @@ $(document).ready(() => {
         if(isValid){
     
             let pessoa = new Pessoa(nome,cpf,email);
-    
+
             cadastros[index] = pessoa;
-    
+
             localStorage.setItem("cadastros", JSON.stringify(cadastros));
-    
+        
             $("#msgErro").css("display", "none");
-            $("#msgExito").css("display", "block");
+            $("#msgEditado").css("display", "block");
     
             setTimeout(() => {
     
-                $("#msgExito").css("display", "none");
+                $("#msgEditado").css("display", "none");
                     
             }, 5000);
     
         } else {
     
-            $("#msgExito").css("display", "none");
+            $("#msgEditado").css("display", "none");
             $("#msgErro").css("display", "block");
     
             setTimeout(() => {
@@ -269,49 +243,98 @@ $(document).ready(() => {
         event.preventDefault();
     })
     ////////////////////////////
-    
-    //exclui um usuario
-    $("#btExcluir").click(()=>{
 
-        let index = $("#id").val();
-    
-        if(localStorage.getItem("cadastros") != null){
-            cadastros = JSON.parse(localStorage.getItem("cadastros"));
-        }
-        
-        cadastros.splice(index, 1);
-    
-        localStorage.setItem("cadastros", JSON.stringify(cadastros));
-    
-        localStorage.setItem("apagado", "1");
 
-        window.location.replace("index.html");
-
+    //botao close do modal
+    $(".btn-close").click(()=>{
+        imprimeDados();
     })
     ////////////////////////////
 })
 
+function imprimeDados() {
+
+    if (localStorage.getItem("cadastros") != null) {
+        cadastros = JSON.parse(localStorage.getItem("cadastros"));
+    }
+
+    let texto = "";
+
+    for (i = 0; i < cadastros.length; i++) {
+
+        texto += "<tr>" +
+                    "<td>" + cadastros[i].nome + "</td>" +
+                    "<td>" + cadastros[i].cpf + "</td>" +
+                    "<td>" + cadastros[i].email + "</td>" +
+                    "<td>" +
+                        "<button type='button' onclick='pegarId("+i+")' class='btn btn-primary'>Editar</button>" +
+                        "<button type='button' onclick='excluirPessoa("+i+")' class='btn btn-danger'>Excluir</button>" +
+                    "</td>" +
+                "</tr>";
+    }
+
+    if (texto == "") {
+        $("#colunas").html(
+            "<tr>" +
+                "<td colspan='5' class='text-danger'> Nenhum usuário cadastrado até o momento </tr>" +
+            "</tr>"
+        );
+    } else {
+        $("#colunas").html(texto);
+    }
+
+    if (localStorage.getItem("apagado") != null) {
+
+        $("#msgCadastrado").css("display", "none");
+        $("#msgExcluido").css("display", "block");
+    
+        setTimeout(() => {
+            $("#msgExcluido").css("display", "none"); 
+            localStorage.removeItem("apagado");
+        }, 5000);    
+
+    } else {
+        if (localStorage.getItem("cadastrado") != null) {
+
+            $("#msgExcluido").css("display", "none");
+            $("#msgCadastrado").css("display", "block");
+
+            setTimeout(() => {
+                $("#msgCadastrado").css("display", "none"); 
+                localStorage.removeItem("cadastrado");
+            }, 5000); 
+            
+        }
+    }
+}
+
+// funcao usada para levar o id ate o formulario de edição
 function pegarId(id) {
     if (localStorage.getItem("cadastros") != null) {
         cadastros = JSON.parse(localStorage.getItem("cadastros"));
     }
 
-    $("#formularioEditar").find(".mb-3 > #id").val(id);
+    $("#formularioEditar").find("#id").val(id);
     $("#formularioEditar").find(".mb-3 > #nome").val(cadastros[id].nome);
     $("#formularioEditar").find(".mb-3 > #cpf").val(cadastros[id].cpf);
     $("#formularioEditar").find(".mb-3 > .col-md-6 > #email").val(cadastros[id].email);
 
     $("#abrirModalEditar").click();
 }
+////////////////////////////
 
-function mensagem() {
-    if (localStorage.getItem("apagado") != null) {
-        alert("oi")
-        $("#msgExito").css({"display": "block"});
+//exclui uma pessoa
+function excluirPessoa(id) {
 
-        setTimeout(() => {
-            $("#msgExito").css({"display": "none"});
-            localStorage.removeItem("apagado");
-        }, 5000);
-    }
+    if(localStorage.getItem("cadastros") != null){
+        cadastros = JSON.parse(localStorage.getItem("cadastros"));
+    }        
+    cadastros.splice(id, 1);
+
+    localStorage.setItem("cadastros", JSON.stringify(cadastros));
+
+    localStorage.setItem("apagado", "1");
+
+    imprimeDados();
 }
+////////////////////////////

@@ -4,6 +4,20 @@
     font-size: 11pt;
 }
 
-#cadastros, #msgExito, #msgErro, #msgExitoDeletado{
+#cadastros, #msgEditado, #msgErro, #msgExcluido, #msgCadastrado{
     display: none;
+}
+
+.principal{
+   margin: 50px auto;
+   width: 80%;
+}
+
+@media screen and (max-width: 600px){
+    
+    .principal{
+        margin: 50px auto;
+        width: 100%;
+     }
+     
 }

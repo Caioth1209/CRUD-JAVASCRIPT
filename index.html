@@ -10,11 +10,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 </head>
-<body onload="mensagem()">
+<body onload="imprimeDados()">
 
-    <div class="container p-5">
+    <div class="principal">
 
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCadastro">Cadastrar pessoa</button>
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalCadastro">Cadastrar pessoa</button>
+
+        <div class="alert alert-success" id="msgExcluido" role="alert">
+            Pessoa excluída com sucesso!
+        </div>
+
+        <div class="alert alert-success" id="msgCadastrado" role="alert">
+            Pessoa cadastrada com sucesso!
+        </div>
 
         <div class="modal fade" id="modalCadastro" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -27,8 +35,8 @@
                     <form id="formularioCadastro">            
                         <div class="mb-3">
                             <label for="nome" class="form-label">Nome</label>
-                            <input type="text" id="nome" class="form-control" required>
-                            <div id="erroNome" class="form-text text-danger">Digite no mínimo 4 letras.</div>
+                            <input type="text" id="nome" class="form-control" maxlength="20" required>
+                            <div id="erroNome" class="form-text text-danger">Digite no mínimo 4 letras e no máximo 20.</div>
                         </div>
                 
                         <div class="mb-3">
@@ -38,7 +46,7 @@
                         </div>
             
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-6 mb-3">
                                 <label for="email" class="form-label">E-mail</label>
                                 <input type="email" id="email" class="form-control" required>
                                 <div id="erroEmail" class="form-text text-danger">Digite o email corretamente.</div>
@@ -51,16 +59,11 @@
                             </div>
                         </div>
             
-                        <div class="alert alert-success" id="msgExito" role="alert">
-                            Usuário cadastrado com sucesso!
-                        </div>
-            
                         <div class="alert alert-danger" id="msgErro" role="alert">
                             CPF ou email já existentes!
                         </div>
             
                         <button type="submit" class="btn btn-success">Cadastrar</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
                     </form>
                 </div>
               </div>
@@ -79,12 +82,12 @@
                 <div class="modal-body">
                     <form id="formularioEditar"> 
                         
-                        <input type="hidden" id="id" class="form-control">
+                        <input type="text" hidden id="id" class="form-control">
 
                         <div class="mb-3">
                             <label for="nome" class="form-label">Nome</label>
-                            <input type="text" id="nome" class="form-control" required>
-                            <div id="erroNome" class="form-text text-danger">Digite no mínimo 4 letras.</div>
+                            <input type="text" id="nome" class="form-control" maxlength="20" required>
+                            <div id="erroNome" class="form-text text-danger">Digite no mínimo 4 letras e no máximo 20.</div>
                         </div>
                 
                         <div class="mb-3">
@@ -94,7 +97,7 @@
                         </div>
             
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-6 mb-3">
                                 <label for="email" class="form-label">E-mail</label>
                                 <input type="email" id="email" class="form-control" required>
                                 <div id="erroEmail" class="form-text text-danger">Digite o email corretamente.</div>
@@ -107,8 +110,8 @@
                             </div>
                         </div>
             
-                        <div class="alert alert-success" id="msgExito" role="alert">
-                            Usuário editado com sucesso!
+                        <div class="alert alert-success" id="msgEditado" role="alert">
+                            Pessoa editada com sucesso!
                         </div>
             
                         <div class="alert alert-danger" id="msgErro" role="alert">
@@ -122,11 +125,7 @@
             </div>
         </div>
 
-        <div class="alert alert-success" id="msgExito" role="alert">
-            Pessoa excluída com sucesso!
-        </div>
-
-        <div class="p-3">
+        <div>
             <table class="table table-striped">
                 <thead>
                   <tr>
@@ -139,7 +138,7 @@
                 <tbody id="colunas">
                     
                 </tbody>
-              </table>
+            </table>
         </div>
     </div>
 
