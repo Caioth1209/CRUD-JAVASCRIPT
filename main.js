@@ -1,3 +1,5 @@
+let cadastros = [];
+
 class Pessoa{
     nome;
     cpf;
@@ -8,9 +10,42 @@ class Pessoa{
         this.cpf = cpf;
         this.email = email;
     }
-}
 
-let cadastros = [];
+    cadastrar(){
+        cadastros.push(this);
+
+        localStorage.setItem("cadastros", JSON.stringify(cadastros));
+
+        $(".btn-close").click();
+
+        localStorage.setItem("cadastrado", "1");
+    }
+
+    editar(id){
+        cadastros[id] = this;
+
+        localStorage.setItem("cadastros", JSON.stringify(cadastros));
+    
+        $("#formularioEditar").find("#msgErro").css("display", "none");
+        $("#msgEditado").css("display", "block");
+
+        setTimeout(() => {
+
+            $("#msgEditado").css("display", "none");
+                
+        }, 5000);
+    }
+
+    excluir(id){
+        cadastros.splice(id, 1);
+
+        localStorage.setItem("cadastros", JSON.stringify(cadastros));
+
+        localStorage.setItem("apagado", "1");
+
+        $(".btn-close").click();
+    }
+}
 
 $(document).ready(() => {
 
@@ -29,25 +64,19 @@ $(document).ready(() => {
 
         let isValid = true;
 
-        for(i = 0; i < cadastros.length; i++){
+        const verifica = cadastros.filter((el)=> {
+            return el.cpf == cpf || el.email == email;
+        })
 
-            if (cpf === cadastros[i].cpf || email === cadastros[i].email) {
-                isValid = false;
-                break;
-            }
+        if (verifica.length > 0) {
+            isValid = false;
         }
 
         if (isValid) {
             
             let pessoa = new Pessoa(nome, cpf, email);
 
-            cadastros.push(pessoa);
-
-            localStorage.setItem("cadastros", JSON.stringify(cadastros));
-
-            $(".btn-close").click();
-
-            localStorage.setItem("cadastrado", "1");
+            pessoa.cadastrar();
 
             imprimeDados();
 
@@ -201,33 +230,21 @@ $(document).ready(() => {
         
         let isValid = true;
     
-        for (i = 0; i < cadastros.length; i++){
-    
-            // se for igual não tem porque verificar se o dado da pessoa é igual ao da mesma
-            if(i != index){
-                if ((cpf == cadastros[i].cpf || email == cadastros[i].email)) {
-                    isValid = false;
-                    break;
-                }
+        const verifica = cadastros.filter((el, id)=> {
+            if (id != index) {
+                return el.cpf == cpf || el.email == email;   
             }
+        })
+
+        if (verifica.length > 0) {
+            isValid = false;
         }
     
         if(isValid){
     
             let pessoa = new Pessoa(nome,cpf,email);
 
-            cadastros[index] = pessoa;
-
-            localStorage.setItem("cadastros", JSON.stringify(cadastros));
-        
-            $("#formularioEditar").find("#msgErro").css("display", "none");
-            $("#msgEditado").css("display", "block");
-    
-            setTimeout(() => {
-    
-                $("#msgEditado").css("display", "none");
-                    
-            }, 5000);
+            pessoa.editar(index);
     
         } else {
     
@@ -261,13 +278,9 @@ $(document).ready(() => {
 
         let id = $("#formularioExcluir").find("#id").val();
 
-        cadastros.splice(id, 1);
+        let pessoa = new Pessoa();
 
-        localStorage.setItem("cadastros", JSON.stringify(cadastros));
-
-        localStorage.setItem("apagado", "1");
-
-        $(".btn-close").click();
+        pessoa.excluir(id);
     })
     ////////////////////////////
 })
